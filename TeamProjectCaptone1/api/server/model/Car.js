@@ -10,7 +10,7 @@ const Car = mongoose.model(
       type: String,
       ref: "GFS",
     },
-    price: String,
+    prices: String,
     number: Number,
     node: String,
     car_detail: {
