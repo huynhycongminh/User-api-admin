@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 require("./CarModel");
+require("./CarDetail");
 const Car = mongoose.model(
   "Car",
   new mongoose.Schema({

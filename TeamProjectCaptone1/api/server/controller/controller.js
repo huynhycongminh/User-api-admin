@@ -28,7 +28,6 @@ exports.new_test_drive = (reg, res) => {
           if (err) {
             callback(err);
           }
-
           callback(null, cars);
         });
       },
@@ -48,7 +47,7 @@ exports.new_test_drive = (reg, res) => {
       var data = { car_models: results[0], cars: results[1] };
       // check data
       // console.log(data);
-      res.render("new_test_driver", data);
+      res.send(data);
     }
   );
 };
@@ -61,7 +60,6 @@ exports.register_test_drive = async function (req, res) {
     return;
   }
   try {
-    debugger
     const customer = new Customer({
       _id: req.body.customer_id,
       name: req.body.name,
@@ -188,7 +186,6 @@ exports.logout = (req, res) => {
   res.send("logout success!");
 };
 
-
 exports.get_data = (req, res) => {
   CustomerCar.find()
     .populate({
@@ -208,4 +205,40 @@ exports.get_data = (req, res) => {
     .then((data) => {
       res.send(data);
     });
+};
+
+exports.get_list_car = (req, res) => {
+  Car.find()
+    .then((data) => res.send(data))
+    .catch((err) => console.log(err));
+};
+
+exports.select_car = (req, res) => {
+  Car.find({ _id: req.query._id })
+    .populate({
+      path: "car_detail",
+      model: "CarDetail",
+      populate: [
+        {
+          path: "furniture",
+          model: "Furniture",
+        },
+        {
+          path: "exterior",
+          model: "Exterior",
+        },
+        {
+          path: "engine_transmission",
+          model: "EngineTransmission",
+        },
+        {
+          path: "size_volume",
+          model: "SizeVolume",
+        },
+      ],
+    })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => console.log(err));
 };
