@@ -15,7 +15,6 @@ import Layer1CP from "../Section/Company/Layer1CP";
 import Layer2CP from "../Section/Company/Layer2CP";
 import Layer3CP from "../Section/Company/Layer3CP";
 import BannerCompare from "../Section/CompareCar/BannerCompare";
-import IconCompare from "../Section/CompareCar/IconCompare";
 import SpecificationsCompare from "../Section/CompareCar/SpecificationsCompare";
 import CarItemsHP from "../Section/HomePage/CarItemsHP";
 import IntroHP from "../Section/HomePage/IntroHP";
@@ -47,7 +46,6 @@ export default class Landing extends Component {
         </Route>
         <Route exact path="/Compare">
           <HeaderCompare />
-          <IconCompare />
           <SpecificationsCompare />
           <BannerCompare />
         </Route>
