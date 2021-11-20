@@ -61,7 +61,6 @@ exports.register_test_drive = async function (req, res) {
   }
   try {
     const customer = new Customer({
-      _id: req.body.customer_id,
       name: req.body.name,
       phoneNumber: req.body.phoneNumber,
       email: req.body.email,
@@ -69,23 +68,24 @@ exports.register_test_drive = async function (req, res) {
       note: req.body.note,
     });
     await customer.save().then((data) => {
-      res.send();
+      res.write("Create customer successfully !!!\n");
     });
+
     const customer_car_model = new CustomerCarModel({
-      customer: req.body.customer_id,
+      customer: customer._id,
       car_model: req.body.car_model_id,
     });
     await customer_car_model.save().then((data) => {
-      res.send();
+      res.write("Create customer car model successfully !!!\n");
     });
 
     const customer_car = new CustomerCar({
-      customer: req.body.customer_id,
+      customer: customer._id,
       car: req.body.car_id,
-      status: req.body.status,
+      status: 1,
     });
     await customer_car.save().then((data) => {
-      res.send();
+      res.end("Create customer car successfully !!!\n");
     });
   } catch (err) {
     console.log(err);

@@ -1,26 +1,35 @@
 import React, { Component } from "react";
 import axios from "axios";
 export default class FormRegister extends Component {
-  state = {
-    customer_id: "",
-    name: "",
-    phoneNumber: "",
-    email: "",
-    address: "",
-    car_model_id: "",
-    car_id: "",
-    note: "",
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: "",
+      phoneNumber: "",
+      email: "",
+      address: "",
+      car_model_id: "",
+      car_id: "",
+      note: "",
+      cars: [],
+      car_models: [],
+    };
+  }
+  componentDidMount() {
+    axios.get("http://localhost:3000/new_test_driver").then((data) => {
+      this.setState({
+        cars: data["data"]["cars"],
+        car_models: data["data"]["car_models"],
+      });
+    });
+  }
 
   isChangeData = (event) => {
     const name = event.target.name;
     const value = event.target.value;
-    // console.log(name);
-    // console.log(value);
     this.setState({ [name]: value });
-   
   };
-  handleSubmit = (event) => {
+  handleSubmit = (event, onSubmitForm) => {
     event.preventDefault();
 
     var user = {
@@ -33,26 +42,24 @@ export default class FormRegister extends Component {
       car_id: this.state.car_id,
     };
     axios
-      .post(`http://localhost:3000/api/register_test_drive`, user, {
+      .post("http://localhost:3000/api/register_test_drive", user, {
         headers: {
           "Content-type": "application/json",
         },
       })
       .then((res) => {
         console.log(res);
+        alert("successful registration");
       })
       .catch((err) => {
         console.log(err);
       });
   };
+
   render() {
     return (
       <div>
-        <form
-          id="register-form"
-          className="container wide"
-          method="post"
-        >
+        <form id="register-form" className="container wide">
           <h1 className="heading-form">
             PLEASE COMPLETE INFORMATION BELLOW TO REGISTER
           </h1>
@@ -131,6 +138,7 @@ export default class FormRegister extends Component {
               />
             </div>
           </div>
+
           <div className="row">
             <div className="form-group Col-lg-6 col-md-6 col-12">
               <label htmlFor="vehicletype" className="form-label">
@@ -141,6 +149,7 @@ export default class FormRegister extends Component {
                   this.isChangeData(event);
                 }}
                 name="car_model_id"
+                value={this.state.car_model_id}
                 required
                 id="vehicletype"
                 className="form-control"
@@ -150,9 +159,9 @@ export default class FormRegister extends Component {
                   appearance: "none",
                 }}
               >
-                <option value>All Vehicle Model</option>
-                <option value= "1">SUV</option>
-                <option value="2">Sedan</option>
+                {this.state.car_models.map((car_models) => (
+                  <option value={car_models._id}>{car_models.name}</option>
+                ))}
               </select>
             </div>
 
@@ -162,9 +171,10 @@ export default class FormRegister extends Component {
               </label>
               <select
                 onChange={(event) => {
-                  this.isChangeData(event)
+                  this.isChangeData(event);
                 }}
                 name="car_id"
+                value={this.state.car_id}
                 required
                 id="vehiclemodel"
                 className="form-control"
@@ -174,9 +184,9 @@ export default class FormRegister extends Component {
                   appearance: "none",
                 }}
               >
-                <option value> All Vehicle Type</option>
-                <option value="1">Audi A6</option>
-                <option value="2">Audi A4</option>
+                {this.state.cars.map((car) => (
+                  <option value={car._id}>{car.name}</option>
+                ))}
               </select>
             </div>
           </div>
@@ -201,9 +211,12 @@ export default class FormRegister extends Component {
               />
             </div>
           </div>
-          <input  value="SEND" className="form-submit" type="reset" onClick={this.handleSubmit}/> 
-            
-        
+          <input
+            value="SEND"
+            className="form-submit"
+            type="reset"
+            onClick={this.handleSubmit}
+          />
         </form>
       </div>
     );
