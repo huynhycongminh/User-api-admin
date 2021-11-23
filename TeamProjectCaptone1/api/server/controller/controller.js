@@ -5,6 +5,8 @@ var CustomerCarModel = require("../model/CustomerCarModel");
 var CustomerCar = require("../model/CustomerCar");
 var Customer = require("../model/Customer");
 var AdminLogin = require("../model/AdminLogin");
+var GFS = require("../model/GFS");
+var gfs = require("fs");
 
 // Retrieve all [car, car model] and render form register test driver
 exports.new_test_drive = (reg, res) => {
@@ -216,6 +218,10 @@ exports.get_list_car = (req, res) => {
 exports.select_car = (req, res) => {
   Car.find({ _id: req.query._id })
     .populate({
+      path: "image",
+      model: "GFS",
+    })
+    .populate({
       path: "car_detail",
       model: "CarDetail",
       populate: [
@@ -238,7 +244,20 @@ exports.select_car = (req, res) => {
       ],
     })
     .then((data) => {
-      res.send(data);
+      const readStream = gfs.createReadStream(
+        `../api/assets/img/${data[0].image.filename}`
+      );
+      readStream.on("data", (chunk) => {
+        const result = { data: data, image: chunk.toString("base64") };
+        res.send(result);
+      });
     })
     .catch((err) => console.log(err));
+};
+
+// get image
+exports.get_image = (req, res) => {
+  GFS.findOne({ filename: req.query.filename }).then((data) => {
+    res.send(data);
+  });
 };

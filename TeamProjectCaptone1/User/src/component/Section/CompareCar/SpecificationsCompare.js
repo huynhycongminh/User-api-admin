@@ -18,6 +18,8 @@ export default class SpecificationsCompare extends Component {
       secondCar: null,
       firstCarName: "",
       secondCarName: "",
+      imageFirstCar: null,
+      imageSecondCar: null,
     };
   }
 
@@ -64,8 +66,9 @@ export default class SpecificationsCompare extends Component {
       })
       .then((data) => {
         this.setState({
-          firstCar: data.data[0].car_detail,
-          firstCarName: data.data[0].name,
+          firstCar: data.data.data[0].car_detail,
+          firstCarName: data.data.data[0].name,
+          imageFirstCar: data.data.image,
         });
       })
       .catch((err) => console.log(err));
@@ -79,8 +82,9 @@ export default class SpecificationsCompare extends Component {
       })
       .then((data) => {
         this.setState({
-          secondCar: data.data[0].car_detail,
-          secondCarName: data.data[0].name,
+          secondCar: data.data.data[0].car_detail,
+          secondCarName: data.data.data[0].name,
+          imageSecondCar: data.data.image,
         });
       })
       .catch((err) => console.log(err));
@@ -263,7 +267,24 @@ export default class SpecificationsCompare extends Component {
       </button>
     );
   };
-
+  showImage = () => {
+    if (this.state.firstCar !== null || this.state.secondCar !== null) {
+      return (
+        <div className="row d-flex justify-content-around">
+          <img
+            src={`data:image/png;base64,${this.state.imageFirstCar}`}
+            alt="image"
+          />
+          <img
+            src={`data:image/png;base64,${this.state.imageSecondCar}`}
+            alt="image"
+          />
+        </div>
+      );
+    } else {
+      return "";
+    }
+  };
   showName = () => {
     if (this.state.firstCar !== null || this.state.secondCar !== null) {
       return (
@@ -690,6 +711,7 @@ export default class SpecificationsCompare extends Component {
         </div>
         <div>
           <ul className="info-detail-list section container">
+            <li className="info-detail-item mb32">{this.showImage()}</li>
             <li className="info-detail-item mb-32">{this.showName()}</li>
             <li className="info-detail-item mb-32">
               {this.showButtonImage1()}
