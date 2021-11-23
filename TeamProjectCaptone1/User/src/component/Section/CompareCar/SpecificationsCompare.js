@@ -267,18 +267,19 @@ export default class SpecificationsCompare extends Component {
       </button>
     );
   };
+  renderImage = (base64) => {
+    return base64 !== null ? (
+      <img src={`data:image/png;base64,${base64}`} alt="image" />
+    ) : (
+      <div></div>
+    );
+  };
   showImage = () => {
     if (this.state.firstCar !== null || this.state.secondCar !== null) {
       return (
         <div className="row d-flex justify-content-around">
-          <img
-            src={`data:image/png;base64,${this.state.imageFirstCar}`}
-            alt="image"
-          />
-          <img
-            src={`data:image/png;base64,${this.state.imageSecondCar}`}
-            alt="image"
-          />
+          {this.renderImage(this.state.imageFirstCar)}
+          {this.renderImage(this.state.imageSecondCar)}
         </div>
       );
     } else {
