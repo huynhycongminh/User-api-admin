@@ -254,10 +254,3 @@ exports.select_car = (req, res) => {
     })
     .catch((err) => console.log(err));
 };
-
-// get image
-exports.get_image = (req, res) => {
-  GFS.findOne({ filename: req.query.filename }).then((data) => {
-    res.send(data);
-  });
-};
